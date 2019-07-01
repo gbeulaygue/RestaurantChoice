@@ -9,9 +9,9 @@ namespace RestaurantChoice.Models
     public class User
     {
         public int Id { get; set; }
-        public string Name { get; set; }
         [Required]
         public string FirstName { get; set; }
+        [Required]
         public string PassWord { get; set; }
     }
 }

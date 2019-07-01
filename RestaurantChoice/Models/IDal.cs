@@ -13,10 +13,10 @@ namespace RestaurantChoice.Models
         List<Restaurant> GetAllRestaurants();
         bool ExistingRestaurant(string name);
         User GetUser(int id);
-        User GetUser(string id);
-        int AddUser(string firstName, string passWord);
-        User Authentificate(string firstName, string passWord);
-        bool AlreadyVoted(int idSurvey, string idUser);
+        User GetUser(string idStr);
+        int AddUser(string name, string passWord);
+        User Authentificate(string name, string passWord);
+        bool AlreadyVoted(int idSurvey, string idStr);
         int CreateASurvey();
         void AddVote(int idSurvey, int idRestaurant, int idUser);
         List<Results> GetTheResults(int idSurvey);

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace RestaurantChoice.Models
 {
@@ -12,6 +14,11 @@ namespace RestaurantChoice.Models
         public Dal()
         {
             dataBase = new DataBaseContext();
+        }
+
+        public List<Restaurant> GetAllRestaurants()
+        {
+            return dataBase.Restaurants.ToList();
         }
 
         public void CreateRestaurant(string name, string phoneNumber)
@@ -32,9 +39,93 @@ namespace RestaurantChoice.Models
                 dataBase.SaveChanges();
             }
         }
-        public List<Restaurant> GetAllRestaurants()
+
+        public bool ExistingRestaurant(string name)
         {
-            return dataBase.Restaurants.ToList();
+            return dataBase.Restaurants.Any(r => string.Compare(r.Name, name, StringComparison.CurrentCultureIgnoreCase) == 0);
+        }
+
+        public int AddUser(string firstName, string passWord)
+        {
+            string passWordEncode = EncodeMD5(passWord);
+            User user = new User { FirstName = firstName, PassWord = passWordEncode };
+
+            dataBase.Users.Add(user);
+            dataBase.SaveChanges();
+
+            return user.Id;
+        }
+
+        public User Authentificate(string firstName, string passWord)
+        {
+            string passWordEncode = EncodeMD5(passWord);
+            return dataBase.Users.FirstOrDefault(u => u.FirstName == firstName && u.PassWord == passWordEncode);
+        }
+
+        public User GetUser(int id)
+        {
+            return dataBase.Users.FirstOrDefault(u => u.Id == id);
+        }
+
+        public User GetUser(string idStr)
+        {
+            int id;
+            if (int.TryParse(idStr, out id))
+                return GetUser(id);
+            return null;
+        }
+
+        public int CreateASurvey()
+        {
+            Survey survey = new Survey { Date = DateTime.Now };
+            dataBase.Surveys.Add(survey);
+            dataBase.SaveChanges();
+
+            return survey.Id;
+        }
+
+        public void AddVote(int idSurvey, int idRestaurant, int idUser)
+        {
+            Vote vote = new Vote
+            {
+                Restaurant = dataBase.Restaurants.First(r => r.Id == idRestaurant),
+                User = GetUser(idUser)
+            };
+            Survey survey = dataBase.Surveys.First(s => s.Id == idSurvey);
+            if(survey.Votes == null)
+                survey.Votes = new List<Vote>();
+            survey.Votes.Add(vote);
+            dataBase.SaveChanges();
+        }
+
+        public List<Results> GetTheResults(int idSurvey)
+        {
+            List<Restaurant> restaurants = GetAllRestaurants();
+            List<Results> results = new List<Results>();
+            Survey survey = dataBase.Surveys.First(s => s.Id == idSurvey);
+
+            foreach (IGrouping<int, Vote> grouping in survey.Votes.GroupBy(v => v.Restaurant.Id))
+            {
+                int idRestaurant = grouping.Key;
+                Restaurant restaurant = dataBase.Restaurants.First(r => r.Id == idRestaurant);
+                int numberOfVotes = grouping.Count();
+                results.Add(new Results { Name = restaurant.Name, PhoneNumber = restaurant.PhoneNumber, NumberOfVote = numberOfVotes});
+            }
+
+            return results;
+        }
+
+        public bool AlreadyVoted(int idSurvey, string idStr)
+        {
+            int id;
+            if(int.TryParse(idStr, out id))
+            {
+                Survey survey = dataBase.Surveys.First(s => s.Id == idSurvey);
+                if (survey.Votes == null)
+                    return false;
+                return survey.Votes.Any(v => v.User != null && v.User.Id == id);
+            }
+            return false;
         }
 
         public void Dispose()
@@ -42,91 +133,10 @@ namespace RestaurantChoice.Models
             dataBase.Dispose();
         }
 
-        public bool ExistingRestaurant(string name)
+        private string EncodeMD5(string passWord)
         {
-            return dataBase.Restaurants.Any(r => r.Name == name);
-        }
-
-        public User GetUser(int id)
-        {
-            return dataBase.Users.Find(id);
-        }
-
-        public User GetUser(string id)
-        {
-            int idConverted;
-            User foundUser = null;
-
-            if (int.TryParse(id, out idConverted))
-            {
-                foundUser = GetUser(idConverted);
-            }
-
-            return foundUser;
-        }
-
-        public int AddUser(string firstName, string passWord)
-        {
-            dataBase.Users.Add(new User() { FirstName = firstName, PassWord = passWord });
-            dataBase.SaveChanges();
-
-            return dataBase.Users.FirstOrDefault(u => u.FirstName == firstName && u.PassWord == passWord).Id;
-        }
-
-        public User Authentificate(string firstName, string passWord)
-        {
-            return dataBase.Users.FirstOrDefault(u => u.FirstName == firstName && u.PassWord == passWord);
-        }
-
-        public bool AlreadyVoted(int idSurvey, string idUser)
-        {
-            bool alreadyVoted = false;
-            Survey survey = dataBase.Surveys.Find(idSurvey);
-
-            if(survey != null)
-            {
-                if (survey.Votes.Where(v => v.User.Id == GetUser(idUser).Id).Count() > 0)
-                {
-                    alreadyVoted = true;
-                }
-            }
-
-            return alreadyVoted;
-        }
-
-        public int CreateASurvey()
-        {
-            dataBase.Surveys.Add(new Survey() { Date = DateTime.Now, Votes = new List<Vote>() });
-            dataBase.SaveChanges();
-
-            return dataBase.Surveys.Find(1).Id;
-        }
-
-        public void AddVote(int idSurvey, int idRestaurant, int idUser)
-        {
-            Restaurant restaurant = dataBase.Restaurants.Find(idRestaurant);
-
-            dataBase.Surveys.Find(idSurvey).Votes.Add(new Vote() { Restaurant = restaurant, User = GetUser(idUser)});
-            dataBase.SaveChanges();
-        }
-
-        public List<Results> GetTheResults(int idSurvey)
-        {
-            List<Results> results = new List<Results>();
-            Survey survey = dataBase.Surveys.Find(idSurvey);
-           
-            foreach(Vote vote in survey.Votes.GroupBy(v => v.Restaurant.Id))
-            {
-                Results result = new Results();
-
-                result.Name = vote.Restaurant.Name;
-                result.PhoneNumber = vote.Restaurant.PhoneNumber;
-                result.NumberOfVote = survey.Votes.Where(v => v.Restaurant.Id == vote.Restaurant.Id).Count();
-
-                results.Add(result);
-            }
-
-            return results;
+            string passWordToEncode = "RestaurantChoice" + passWord + "ASP.NET MVC";
+            return BitConverter.ToString(new MD5CryptoServiceProvider().ComputeHash(ASCIIEncoding.Default.GetBytes(passWordToEncode)));
         }
     }
 }

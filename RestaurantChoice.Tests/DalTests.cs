@@ -113,14 +113,14 @@ namespace RestaurantChoice.Tests
         }
 
         [TestMethod]
-        public void GetUser_uUerNonExistent_ReturnNull()
+        public void GetUser_UserNonExistent_ReturnNull()
         {
             User user = dal.GetUser(1);
             Assert.IsNull(user);
         }
 
         [TestMethod]
-        public void GetUser_IdNonNumerique_RetourneNull()
+        public void GetUser_IdNotNumerical_RetourneNull()
         {
             User user = dal.GetUser("abc");
             Assert.IsNull(user);

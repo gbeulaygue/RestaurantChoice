@@ -1,0 +1,24 @@
+﻿@model RestaurantChoice.Models.Restaurant
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>Je suis la vue index</p>
+<ul>
+    <li>@ViewData["message"]</li>
+    <li>@(((DateTime)ViewData["date"]).ToString("dd/MM/yyyy"))</li>
+    <li>@(((RestaurantChoice.Models.Restaurant)ViewData["restaurant"]).Name)</li>
+    <li>@(((RestaurantChoice.Models.Restaurant)ViewData["restaurant"]).PhoneNumber)</li>
+</ul>
+<ul>
+    <li>@ViewBag.message</li>
+    <li>@ViewBag.date.ToString("dd/MM/yyyy")</li>
+    <li>@ViewBag.restaurant.Name</li>
+    <li>@ViewBag.restaurant.PhoneNumber</li>
+</ul>
+<ul>
+    <li>@Model.Name</li>
+    <li>@Model.PhoneNumber</li>
+</ul>

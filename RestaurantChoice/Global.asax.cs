@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Data.Entity;
+using RestaurantChoice.Models;
 
 namespace RestaurantChoice
 {
@@ -13,6 +15,10 @@ namespace RestaurantChoice
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            IDatabaseInitializer<DataBaseContext> init = new InitRestaurantChoice();
+            Database.SetInitializer(init);
+            init.InitializeDatabase(new DataBaseContext());
         }
     }
 }

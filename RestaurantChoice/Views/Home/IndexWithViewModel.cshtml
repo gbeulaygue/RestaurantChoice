@@ -1,0 +1,24 @@
+﻿@model RestaurantChoice.ViewModels.HomeViewModel
+@{
+    ViewBag.Title = "IndexWithViewModel";
+}
+
+<h2>IndexWithViewModel</h2>
+
+<p>Je suis la vue index</p>
+
+<table>
+    <tr>
+        <th>@Model.Message</th>
+        <th>@Model.Date.ToString("dd / MM / yyyy")</th>
+    </tr>
+    @{
+        foreach (var resto in Model.RestaurantList)
+        {
+            <tr>
+                <td>@resto.Name</td>
+                <td>@resto.PhoneNumber</td>
+            </tr>
+        }
+    }
+</table>

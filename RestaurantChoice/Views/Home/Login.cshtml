@@ -1,0 +1,16 @@
+﻿@model RestaurantChoice.ViewModels.HomeViewModel
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Login :</legend>
+        @Html.Label("Login")
+        @Html.TextBox("login", Model.Login)
+        <br />
+
+        @Html.Label("Password")
+        @Html.TextBox("pwd")
+        <br />
+        <input type="submit" value="Login to the site..." />
+    </fieldset>
+}

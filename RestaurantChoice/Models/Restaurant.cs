@@ -11,6 +11,7 @@ namespace RestaurantChoice.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+        [Display(Name="Téléphone")]
         public string PhoneNumber { get; set; }
     }
 }

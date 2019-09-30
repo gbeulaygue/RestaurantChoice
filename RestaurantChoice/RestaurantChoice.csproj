@@ -144,6 +144,7 @@
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Home\ShowRestaurants.cshtml" />
     <Content Include="Views\Restaurant\Index.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

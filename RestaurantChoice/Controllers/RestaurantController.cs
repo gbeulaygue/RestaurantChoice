@@ -9,7 +9,6 @@ namespace RestaurantChoice.Controllers
 {
     public class RestaurantController : Controller
     {
-        // GET: Restaurant
         public ActionResult Index()
         {
             using (IDal dal = new Dal())
@@ -18,5 +17,30 @@ namespace RestaurantChoice.Controllers
                 return View(restaurants);
             }
         }
+
+        public ActionResult ModifyRestaurant(int? id)
+        {
+            //string id = Request.Url.AbsolutePath.Split('/').Last();
+            if (id.HasValue)
+            {
+                ViewBag.Id = id;
+                return View();
+            }
+            else
+                return View("Error");
+        }
+
+        //public ActionResult ModifierRestaurant()
+        //{
+        //    string idStr = Request.QueryString["id"];
+        //    int id;
+        //    if (int.TryParse(idStr, out id))
+        //    {
+        //        ViewBag.Id = id;
+        //        return View();
+        //    }
+        //    else
+        //        return View("Error");
+        //}
     }
 }

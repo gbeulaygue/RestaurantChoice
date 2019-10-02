@@ -9,9 +9,9 @@ namespace RestaurantChoice.Models
     public class Restaurant
     {
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "The restaurant name must be filled")]
         public string Name { get; set; }
-        [Display(Name="Téléphone")]
+        //[Display(Name="Téléphone")]
         public string PhoneNumber { get; set; }
     }
 }

@@ -1,0 +1,25 @@
+﻿@model RestaurantChoice.Models.Restaurant
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Modify a restaurant</legend>
+
+        <div>
+            @Html.LabelFor(model => model.Name)
+            @Html.TextBoxFor(model => model.Name)
+            @*<span style="color:red">@ViewBag.ErrorMessage</span>*@
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+        <div>
+            @Html.LabelFor(model => model.PhoneNumber)
+            @Html.TextBoxFor(model => model.PhoneNumber)
+        </div>
+        <br />
+        <input type="submit" value="Modify" />
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

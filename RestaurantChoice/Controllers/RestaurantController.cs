@@ -18,6 +18,28 @@ namespace RestaurantChoice.Controllers
             }
         }
 
+        public ActionResult CreateRestaurant()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateRestaurant(Restaurant restaurant)
+        {
+            using (IDal dal = new Dal())
+            {
+                if (dal.ExistingRestaurant(restaurant.Name))
+                {
+                    ModelState.AddModelError("Name", "This restaurant name already exists");
+                    return View(restaurant);
+                }
+                if (!ModelState.IsValid)
+                    return View(restaurant);
+                dal.CreateRestaurant(restaurant.Name, restaurant.PhoneNumber);
+                return RedirectToAction("Index");
+            }
+        }
+
         public ActionResult ModifyRestaurant(int? id)
         {
             if (id.HasValue)
@@ -37,17 +59,6 @@ namespace RestaurantChoice.Controllers
         [HttpPost]
         public ActionResult ModifyRestaurant(Restaurant restaurant)
         {
-            //if (string.IsNullOrWhiteSpace(restaurant.Name))
-            //{
-            //    ViewBag.ErrorMessage = "The restaurant name must be filled";
-            //    return View(restaurant);
-            //}
-            //if (!ModelState.IsValid)
-            //{
-            //    ViewBag.ErrorMessage = ModelState["Name"].Errors[0].ErrorMessage;
-            //    return View(restaurant);
-            //}
-
             if (!ModelState.IsValid)
                 return View(restaurant);
             using (IDal dal = new Dal())
@@ -56,6 +67,21 @@ namespace RestaurantChoice.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        //[HttpPost]
+        //public ActionResult ModifyRestaurant(Restaurant restaurant)
+        //{
+        //    if (string.IsNullOrWhiteSpace(restaurant.Name))
+        //    {
+        //        ViewBag.ErrorMessage = "The restaurant name must be filled";
+        //        return View(restaurant);
+        //    }
+        //    if (!ModelState.IsValid)
+        //    {
+        //        ViewBag.ErrorMessage = ModelState["Name"].Errors[0].ErrorMessage;
+        //        return View(restaurant);
+        //    }
+        //}
 
         //[HttpPost]
         //public ActionResult ModifyRestaurant(int? id, string name, string phoneNumber)

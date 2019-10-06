@@ -1,43 +1,67 @@
 ﻿@model RestaurantChoice.Models.Restaurant
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
-<fieldset>
-    <legend>Ajouter un restaurant</legend>
+    <fieldset>
+        <legend>Ajouter un restaurant</legend>
 
-    <div>
-        @Html.LabelFor(model => model.Name)
-        @Html.TextBoxFor(model => model.Name)
-        @Html.ValidationMessageFor(model => model.Name)
-    </div>
-    <div>
-        @Html.LabelFor(model => model.PhoneNumber)
-        @Html.TextBoxFor(model => model.PhoneNumber,
-            new
-            {
-                data_val_verifcontact = "You must enter at least one way to contact the restaurant",
-                data_val_verifcontact_parametre1 = "PhoneNumber",
-                data_val_verifcontact_parametre2 = "Email"
-            })
-        @Html.ValidationMessageFor(model => model.PhoneNumber)
-    </div>
-    <div>
-        @Html.LabelFor(model => model.Email)
-        @Html.TextBoxFor(model => model.Email,
-            new
-            {
-                data_val = "true",
-                data_val_verifcontact = "You must enter at least one way to contact the restaurant",
-                data_val_verifcontact_parametre1 = "PhoneNumber",
-                data_val_verifcontact_parametre2 = "Email"
-            })
-        @Html.ValidationMessageFor(model => model.Email)
-    </div>
-    <br />
-    <input type="submit" value="Add" />
-</fieldset>
+        <div>
+            @Html.LabelFor(model => model.Name)
+            @Html.TextBoxFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+        <div>
+            @Html.LabelFor(model => model.PhoneNumber)
+            @Html.TextBoxFor(model => model.PhoneNumber)
+            <!-- With javascript for client-side validation (Validate and js) -->
+            @*@Html.TextBoxFor(model => model.PhoneNumber,
+                new
+                {
+                    data_val_verifcontact = "You must enter at least one way to contact the restaurant",
+                    data_val_verifcontact_parameter1 = "PhoneNumber",
+                    data_val_verifcontact_parameter2 = "Email"
+                })*@
+            @Html.ValidationMessageFor(model => model.PhoneNumber)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Email)
+
+            @Html.TextBoxFor(model => model.Email)
+            <!-- With javascript for client-side validation (Validate and js) -->
+            @*@Html.TextBoxFor(model => model.Email,
+                new
+                {
+                    data_val = "true",
+                    data_val_verifcontact = "You must enter at least one way to contact the restaurant",
+                    data_val_verifcontact_parameter1 = "PhoneNumber",
+                    data_val_verifcontact_parameter2 = "Email"
+                })*@
+            @Html.ValidationMessageFor(model => model.Email)
+
+        </div>
+
+        <br />
+
+        <input type="submit" value="Add" />
+    </fieldset>
 }
 
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+<script type="text/javascript">
+    jQuery.validator.addMethod("verifcontact",
+        function (value, element, params) {
+            var phoneNumber = $("#" + params.parameter1).val();
+            var email = $("#" + params.parameter2).val();
+            return phoneNumber != '' || email != '';
+        });
+
+    jQuery.validator.unobtrusive.adapters.add
+        ("verifcontact", ["parameter1", "parameter2"], function (options) {
+            options.rules["verifcontact"] = options.params;
+            options.messages["verifcontact"] = options.message;
+        });
+</script>

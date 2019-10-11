@@ -69,5 +69,12 @@ namespace RestaurantChoice.Controllers
 
             return PartialView(listeDesRestos);
         }
+
+        public ActionResult DisplayDate(string id)
+        {
+            ViewBag.Message = "Hello " + id + " !";
+            ViewData["Date"] = new DateTime(2012, 4, 28);
+            return View("Index");
+        }
     }
 }

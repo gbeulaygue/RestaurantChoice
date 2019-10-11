@@ -39,7 +39,7 @@ namespace RestaurantChoice.Tests
 
             using (IDal dal = new Dal())
             {
-                dal.CreateRestaurant("La bonne fourchette", "0102030405");
+                dal.CreateRestaurant("La bonne fourchette", "0102030405", "LaBonneFourchette@email.com");
                 List<Restaurant> restaurants = dal.GetAllRestaurants();
 
                 Assert.IsNotNull(restaurants);
@@ -54,7 +54,7 @@ namespace RestaurantChoice.Tests
         {
             using (IDal dal = new Dal())
             {
-                dal.CreateRestaurant("La bonne fourchette", "0102030405");
+                dal.CreateRestaurant("La bonne fourchette", "0102030405", "LaBonneFourchette@email.com");
                 List<Restaurant> restaurants = dal.GetAllRestaurants();
                 int idRestaurantToChange = restaurants.First(r => r.Name == "La bonne fourchette").Id;
 
@@ -72,7 +72,7 @@ namespace RestaurantChoice.Tests
         [TestMethod]
         public void CreateRestaurant_AvecUnNouveauRestaurant_ObtientTousLesRestaurantsRenvoitBienLeRestaurant()
         {
-            dal.CreateRestaurant("La bonne fourchette", "0102030405");
+            dal.CreateRestaurant("La bonne fourchette", "0102030405", "LaBonneFourchette@email.com");
             List<Restaurant> restos = dal.GetAllRestaurants();
 
             Assert.IsNotNull(restos);
@@ -84,7 +84,7 @@ namespace RestaurantChoice.Tests
         [TestMethod]
         public void ModifierRestaurant_CreationDUnNouveauRestaurantEtChangementNameEtPhoneNumber_LaModificationEstCorrecteApresRechargement()
         {
-            dal.CreateRestaurant("La bonne fourchette", "0102030405");
+            dal.CreateRestaurant("La bonne fourchette", "0102030405", "LaBonneFourchette@email.com");
             dal.ModifyRestaurant(1, "La bonne cuillère", null);
 
             List<Restaurant> restos = dal.GetAllRestaurants();
@@ -97,7 +97,7 @@ namespace RestaurantChoice.Tests
         [TestMethod]
         public void Restaurantexist_AvecCreationDunRestauraunt_RenvoiQuilexist()
         {
-            dal.CreateRestaurant("La bonne fourchette", "0102030405");
+            dal.CreateRestaurant("La bonne fourchette", "0102030405", "LaBonneFourchette@email.com");
 
             bool exist = dal.ExistingRestaurant("La bonne fourchette");
 
@@ -203,7 +203,7 @@ namespace RestaurantChoice.Tests
         {
             int idSurvey = dal.CreateASurvey();
             int iduser = dal.AddUser("Nouvel user", "12345");
-            dal.CreateRestaurant("La bonne fourchette", "0102030405");
+            dal.CreateRestaurant("La bonne fourchette", "0102030405", "LaBonneFourchette@email.com");
             dal.AddVote(idSurvey, 1, iduser);
 
             bool voted = dal.AlreadyVoted(idSurvey, iduser.ToString());
@@ -219,10 +219,10 @@ namespace RestaurantChoice.Tests
             int iduser2 = dal.AddUser("user2", "12345");
             int iduser3 = dal.AddUser("user3", "12345");
 
-            dal.CreateRestaurant("Resto pinière", "0102030405");
-            dal.CreateRestaurant("Resto pinambour", "0102030405");
-            dal.CreateRestaurant("Resto mate", "0102030405");
-            dal.CreateRestaurant("Resto ride", "0102030405");
+            dal.CreateRestaurant("Resto pinière", "0102030405", "RestoPinière@email.com");
+            dal.CreateRestaurant("Resto pinambour", "0102030405", "RestoPinambou@email.com");
+            dal.CreateRestaurant("Resto mate", "0102030405", "RestoMate@email.com");
+            dal.CreateRestaurant("Resto ride", "0102030405", "RestoRide@email.com");
 
             dal.AddVote(idSurvey, 1, iduser1);
             dal.AddVote(idSurvey, 3, iduser1);
@@ -251,10 +251,10 @@ namespace RestaurantChoice.Tests
             int iduser1 = dal.AddUser("user1", "12345");
             int iduser2 = dal.AddUser("user2", "12345");
             int iduser3 = dal.AddUser("user3", "12345");
-            dal.CreateRestaurant("Resto pinière", "0102030405");
-            dal.CreateRestaurant("Resto pinambour", "0102030405");
-            dal.CreateRestaurant("Resto mate", "0102030405");
-            dal.CreateRestaurant("Resto ride", "0102030405");
+            dal.CreateRestaurant("Resto pinière", "0102030405", "RestoPinière@email.com");
+            dal.CreateRestaurant("Resto pinambour", "0102030405", "RestoPinambou@email.com");
+            dal.CreateRestaurant("Resto mate", "0102030405", "RestoMate@email.com");
+            dal.CreateRestaurant("Resto ride", "0102030405", "RestoRide@email.com");
             dal.AddVote(idSurvey1, 1, iduser1);
             dal.AddVote(idSurvey1, 3, iduser1);
             dal.AddVote(idSurvey1, 4, iduser1);

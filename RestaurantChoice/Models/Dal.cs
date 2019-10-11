@@ -21,9 +21,9 @@ namespace RestaurantChoice.Models
             return dataBase.Restaurants.ToList();
         }
 
-        public void CreateRestaurant(string name, string phoneNumber)
+        public void CreateRestaurant(string name, string phoneNumber, string email)
         {
-            dataBase.Restaurants.Add(new Restaurant { Name = name, PhoneNumber = phoneNumber });
+            dataBase.Restaurants.Add(new Restaurant { Name = name, PhoneNumber = phoneNumber, Email = email });
             dataBase.SaveChanges();
         }
 

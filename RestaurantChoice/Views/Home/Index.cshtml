@@ -1,66 +1,19 @@
-﻿@model RestaurantChoice.Models.Restaurant
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Welcome Home !</h2>
 
-<p>Je suis la vue index</p>
+<p>Ready to choose a restaurant?</p>
 
-<input type="text" id="Name" value="@Model.Name" />
-<input type="tel" id="PhoneNumber" value="@Model.PhoneNumber" />
-<input type="submit" value="Submit" />
-
-<br />
-
-@Html.TextBox("Name", Model.Name)
-@Html.TextBox("PhoneNumber", Model.PhoneNumber)
-@Html.Label("IsMajor", "Tick the box if you are major")
-@Html.CheckBox("IsMajor", true)
-
-<br />
-
-@Html.LabelFor(model => model.Name)
-@Html.TextBoxFor(model => model.Name)
-@Html.LabelFor(model => model.PhoneNumber)
-@Html.TextBoxFor(model => model.PhoneNumber)
-
-<br />
-
-@Html.DropDownList("SelectedRestaurant", (SelectList)ViewBag.restaurantList)
-
-<br />
-
-@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { target = "_blank" }))
+@using (Html.BeginForm())
 {
-    @Html.Label("estMajeur", "Cochez la case si vous êtes <strong>majeur</strong>")
-    @Html.CheckBox("estMajeur", true)
-    <input type="submit" value="Envoyer" />
+    <input type="submit" value="Create a survey" />
 }
 
 <br />
 
-@Html.ActionLink("Modify the restaurant", "ModifyRestaurant", "Restaurant", new { id = Model.Id}, null)
-
-<br />
-
-@Html.Action("ShowRestaurants")
-
-<br />
-
 <ul>
-    <li>@ViewData["message"]</li>
-    <li>@(((DateTime)ViewData["date"]).ToString("dd/MM/yyyy"))</li>
-    <li>@(((RestaurantChoice.Models.Restaurant)ViewData["restaurant"]).Name)</li>
-    <li>@(((RestaurantChoice.Models.Restaurant)ViewData["restaurant"]).PhoneNumber)</li>
-</ul>
-<ul>
-    <li>@ViewBag.message</li>
-    <li>@ViewBag.date.ToString("dd/MM/yyyy")</li>
-    <li>@ViewBag.restaurant.Name</li>
-    <li>@ViewBag.restaurant.PhoneNumber</li>
-</ul>
-<ul>
-    <li>@Model.Name</li>
-    <li>@Model.PhoneNumber</li>
+    <li>@Html.ActionLink("Add a restaurant", "CreateRestaurant", "Restaurant")</li>
+    <li>@Html.ActionLink("Modify restaurants", "ModifyRestaurant", "Restaurant")</li>
 </ul>

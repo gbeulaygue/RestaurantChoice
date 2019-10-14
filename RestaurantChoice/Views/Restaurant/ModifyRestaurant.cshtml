@@ -24,3 +24,18 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+<script type="text/javascript">
+    jQuery.validator.addMethod("verifcontact",
+        function (value, element, params) {
+            var phoneNumber = $("#" + params.parameter1).val();
+            var email = $("#" + params.parameter2).val();
+            return phoneNumber != '' || email != '';
+        });
+
+    jQuery.validator.unobtrusive.adapters.add
+        ("verifcontact", ["parameter1", "parameter2"], function (options) {
+            options.rules["verifcontact"] = options.params;
+            options.messages["verifcontact"] = options.message;
+        });
+</script>

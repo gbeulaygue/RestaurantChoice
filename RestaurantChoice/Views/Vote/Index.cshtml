@@ -1,0 +1,44 @@
+﻿@model RestaurantChoice.ViewModels.RestaurantVoteViewModel
+@{
+    ViewBag.Title = "Vote for a restaurant";
+}
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>Check the restaurants where you want to go. Attention, the vote is final!</legend>
+
+        @Html.ValidationMessageFor(model => model.ListOfRestaurants)
+        @for (int i = 0; i < Model.ListOfRestaurants.Count; i++)
+        {
+            <div>
+                @Html.CheckBoxFor(m => m.ListOfRestaurants[i].IsCheck, new { data_val = "true", data_val_verifList = "You must choose at least one restaurant" })
+                @Html.LabelFor(m => m.ListOfRestaurants[i].IsCheck, Model.ListOfRestaurants[i].NameAndPhoneNumber)
+                @*@Html.ValidationMessageFor(m => m.ListOfRestaurants[i].IsCheck)*@
+                @Html.HiddenFor(m => m.ListOfRestaurants[i].Id)
+                @Html.HiddenFor(m => m.ListOfRestaurants[i].NameAndPhoneNumber)
+            </div>
+        }
+        <input type="submit" value="Validate the choice" style="margin-top: 20px;" />
+    </fieldset>
+}
+
+<script type="text/javascript">
+    jQuery.validator.addMethod("verifList", function (value, element, params) {
+        var numberCoche = $('input:checked[data-val-verifList]').length;
+        if (numberCoche == 0) {
+            $('span[data-valmsg-for=ListOfRestaurants]').text(params.message).removeClass("field-validation-valid").addClass("field-validation-error");
+        }
+        else {
+            $('span[data-valmsg-for=ListOfRestaurants]').text('');
+        }
+        return numberCoche != 0;
+    });
+
+    jQuery.validator.unobtrusive.adapters.add
+        ("verifList", function (options) {
+            options.params.message = options.message;
+            options.rules["verifList"] = options.params;
+            options.messages["verifList"] = options.message;
+        });
+</script>

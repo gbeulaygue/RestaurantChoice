@@ -138,5 +138,45 @@ namespace RestaurantChoice.Models
             string passWordToEncode = "RestaurantChoice" + passWord + "ASP.NET MVC";
             return BitConverter.ToString(new MD5CryptoServiceProvider().ComputeHash(ASCIIEncoding.Default.GetBytes(passWordToEncode)));
         }
+
+        // For TP
+        public User GetUserByNavigator(string idStr)
+        {
+            switch (idStr)
+            {
+                case "Chrome":
+                    return CreateOrRecover("Nico", "1234");
+                case "IE":
+                    return CreateOrRecover("Jérémie", "1234");
+                case "Firefox":
+                    return CreateOrRecover("Delphine", "1234");
+                default:
+                    return CreateOrRecover("Timéo", "1234");
+            }
+        }
+
+        private User CreateOrRecover(string name, string passWord)
+        {
+            User user = Authentificate(name, passWord);
+            if (user == null)
+            {
+                int id = AddUser(name, passWord);
+                return GetUser(id);
+            }
+            return user;
+        }
+
+        public bool AlreadyVotedByNavigator(int idSurvey, string idStr)
+        {
+            User user = GetUserByNavigator(idStr);
+            if (user != null)
+            {
+                Survey survey = dataBase.Surveys.First(s => s.Id == idSurvey);
+                if (survey.Votes == null)
+                    return false;
+                return survey.Votes.Any(v => v.User != null && v.User.Id == user.Id);
+            }
+            return false;
+        }
     }
 }

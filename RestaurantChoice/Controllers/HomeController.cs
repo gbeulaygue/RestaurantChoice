@@ -10,8 +10,32 @@ namespace RestaurantChoice.Controllers
 {
     public class HomeController : Controller
     {
+        private IDal dal { get; set; }
+
+        public HomeController() : this(new Dal())
+        {
+        }
+
+        public HomeController(IDal dalIOC)
+        {
+            dal = dalIOC;
+        }
+
         // GET: Home
         public ActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ActionName("Index")]
+        public ActionResult IndexPost()
+        {
+            int idSurvey = dal.CreateASurvey();
+            return RedirectToAction("Index", "Vote", new { id = idSurvey});
+        }
+
+        public ActionResult Index_OLD()
         {
             // ViewData : dictionary
             ViewData["message"] = "Hello from the controller";

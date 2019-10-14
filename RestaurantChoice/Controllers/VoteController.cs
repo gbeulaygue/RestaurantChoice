@@ -28,27 +28,35 @@ namespace RestaurantChoice.Controllers
                 ListOfRestaurants = dal.GetAllRestaurants().Select(r => new RestaurantCheckBoxViewModel { Id = r.Id, NameAndPhoneNumber = string.Format("{0} ({1})", r.Name, r.PhoneNumber) }).ToList()
             };
             if (dal.AlreadyVotedByNavigator(id, Request.Browser.Browser))
-                return RedirectToAction("Index");
+                return RedirectToAction("DisplayResult", new { idSurvey = id });
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public ActionResult Index(RestaurantVoteViewModel restaurantVoteViewModel)
+        public ActionResult Index(RestaurantVoteViewModel restaurantVoteViewModel, int id)
         {
             if (!ModelState.IsValid)
-            {
                 return View(restaurantVoteViewModel);
-            }
-            else
+            User user = dal.GetUserByNavigator(Request.Browser.Browser);
+            if (user == null)
+                return new HttpUnauthorizedResult();
+            foreach (RestaurantCheckBoxViewModel restaurant in restaurantVoteViewModel.ListOfRestaurants.Where(r => r.IsCheck))
             {
-                return RedirectToAction("Index");
+                dal.AddVote(id, restaurant.Id, user.Id);
             }
+
+            return RedirectToAction("DisplayResult", new { id = id });
         }
 
-        public ActionResult DisplayResult()
+        public ActionResult DisplayResult(int id)
         {
-            return View();
+            if (!dal.AlreadyVotedByNavigator(id, Request.Browser.Browser))
+            {
+                return RedirectToAction("Index", new { id = id });
+            }
+            List<Results> results = dal.GetTheResults(id);
+            return View(results.OrderByDescending(r => r.NumberOfVote).ToList());
         }
     }
 }

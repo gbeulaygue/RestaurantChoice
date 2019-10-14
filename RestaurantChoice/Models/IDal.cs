@@ -21,5 +21,6 @@ namespace RestaurantChoice.Models
         void AddVote(int idSurvey, int idRestaurant, int idUser);
         List<Results> GetTheResults(int idSurvey);
         bool AlreadyVotedByNavigator(int idSurvey, string idStr);
+        User GetUserByNavigator(string idStr);
     }
 }

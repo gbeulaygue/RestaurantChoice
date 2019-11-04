@@ -5,6 +5,7 @@ using System.Text;
 using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RestaurantChoice.Controllers;
+using RestaurantChoice.Models;
 
 namespace RestaurantChoice.Tests
 {
@@ -31,6 +32,22 @@ namespace RestaurantChoice.Tests
             Assert.AreEqual("Index", resultat.ViewName);
             Assert.AreEqual(new DateTime(2012, 4, 28), resultat.ViewData["date"]);
             Assert.AreEqual("Hello Nicolas !", resultat.ViewBag.Message);
+        }
+
+        [TestMethod]
+        public void HomeController_IndexPost_ReturnActionVote()
+        {
+            using (IDal dal = new HardDall())
+            {
+                HomeController controller = new HomeController(dal);
+
+                RedirectToRouteResult result = (RedirectToRouteResult)controller.IndexPost();
+
+                Assert.AreEqual("Index", result.RouteValues["action"]);
+                Assert.AreEqual("Vote", result.RouteValues["controller"]);
+                List<Results> resultats = dal.GetTheResults(1);
+                Assert.IsNotNull(resultats);
+            }
         }
     }
 }
